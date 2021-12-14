@@ -5,7 +5,6 @@ from validacpf import input_clear
 
 while True:
 
-    nove_digitos = ''
     cpf = input('Digite o CPF: ')
     cpf = input_clear(cpf)
     if cpf.isnumeric() and len(cpf) == 11:
