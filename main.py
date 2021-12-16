@@ -1,7 +1,6 @@
 # VALIDADOR DE CPF:
 import re
-
-from validacpf import input_clear
+from validacpf import check_cpf, get_mult, input_clear, lista
 
 while True:
 
@@ -10,42 +9,23 @@ while True:
     if cpf.isnumeric() and len(cpf) == 11:
         nove_digitos = cpf[:-2]
     else:
-        if not cpf.isnumeric():
-            print('Por favor, digite apenas números.')
-        else:
-            print('Erro! Digite novamente.')
+        msg = 'Por favor, digite apenas números' if not cpf.isnumeric() else 'Erro! Digite novamente.'
+        print(msg)
         continue
     
-    print(nove_digitos)                     # Check de funcionamento da variável e filtros.
+    # print(nove_digitos)                     Check de funcionamento da variável e filtros.
 
-    lista_nove_dig = []
-    for d in nove_digitos:                  # Função para lançar os valores na lista
-        lista_nove_dig.append(d)            # Insere cada item dentro da lista
-    # print(lista_nove_dig)                 # Checagem se a lista está correta.
-    soma = 0
-    n = 10                                  # Variável criada para ser usada no for in a seguir, pois irá ser multiplicada por cada um dos dígitos do cpf inserido.
-    for d in lista_nove_dig:                # For...in para guardar a soma das multiplicações dos dígitos dos 9 primeiros dígitos com os contadores criados.
-        m = int(d) * int(n)                 
-        soma = int(soma) + m
-        n -= 1
-    if (11 - (int(soma) % 11)) > 9:         # Verificador do primeiro dígito (com a fórmula)
-        digito1 = 00
-    else:
-        digito1 = 11 - (int(soma) % 11)     # Cálculo para verificar qual o 10º caractere.
-    lista_nove_dig.append(str(digito1))
-    n = 11
-    soma = 0
-    for d in lista_nove_dig:                # For...in para guardar a soma das multiplicações dos dígitos dos 10 primeiros dígitos com os contadores criados.
-        m = int(d) * int(n)
-        soma += m
-        n-= 1
-    if 11 - (soma % 11) > 9:                # Condição para saber 
-        digito2 = 0
-    else:
-        digito2 = 11 - int((soma % 11))
-    lista_nove_dig.append(str(digito2))     # Inserindo o dígito, que foi verificado, na lista.
-    print(lista_nove_dig)
-    novo_cpf = ''.join(lista_nove_dig)      # Transformando a lista com os dígitos do cpf em uma string.
-    print(novo_cpf)
-    msg = 'CPF válido!' if int(novo_cpf) == int(cpf) else 'CPF inválido!'    # Mensagem a ser exibida
-    print(msg)
+    soma_digito_1 = get_mult(nove_digitos, lista)
+
+    digito_1 = '0' if 11 - soma_digito_1 % 11 > 9 else str(11 - soma_digito_1 % 11)
+
+    dez_digitos = nove_digitos + digito_1
+
+    soma_digito_2 = get_mult(dez_digitos, lista)
+
+    digito_2  = '0' if 11 - soma_digito_2 % 11 > 9 else str(11 - soma_digito_2 % 11)
+
+    cpf_checado = dez_digitos + digito_2
+
+    print(check_cpf(cpf, cpf_checado))
+
